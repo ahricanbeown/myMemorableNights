@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./yourCutePage/yourCutePage.css">
+    <title>不，是你的分页</title>
+
+</head>
+
+<body>
+    <table border="1" cellspacing="0" style="margin:0 auto;">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>学生ID</th>
+                <th>学生姓名</th>
+                <th>学生年龄</th>
+                <th>学生性别</th>
+                <th>学生班级</th>
+                <th>学生成绩</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+
+
+
+    <div style="text-align: center;">
+        <div class="your-page"></div>
+    </div>
+
+
+
+
+    <!-- 造一个表格 -->
+    <script>
+        // 用来准备数据
+        const firstName = '赵钱孙李周吴郑王冯陈楚魏将沈韩杨朱琴尤许何吕施章'
+        const laseName = '氢氦锂铍硼碳氮氧氟氖钠镁铝硅磷硫氯氩钾钙'
+        const thirdName = '一二三四五六七八九十'
+        const gender = '男女'
+        const fn = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a
+
+        const tableDataArr = []
+        for (let i = 0; i <= 1000; i++) {
+            tableDataArr.push({
+                id: i + 1,
+                name: firstName[fn(0, 23)] + laseName[fn(0, 19)] + thirdName[fn(0, 9)],
+                age: fn(16, 30),
+                gender: gender[fn(0, 1)],
+                class: fn(1910, 1920),
+                score: fn(40, 100)
+            })
+        }
+        // console.log(tableDataArr)
+
+        // 需求：在页面分别显示1、2、3页数据
+        // 每页 10 条
+        // 1  1-10      （1 -1）* 10   = 0  
+        // 2  11-20     （2 -1）* 10 = 10
+        // 3  21-30    （3 -1）* 10 = 20
+
+        // 分页【起始】位置公式：（当前页 -1）* 每页显示条数
+        // 分页【结束】位置公式： 起始位置 + 每页显示条数     /  当前页 * 每页条数
+
+        let pagenum = 1
+        let pagesize = 10
+        let startnum = (pagenum - 1) * pagesize //当前页面开始0  10  20 
+
+        // for (let i = 0; i<10; i++)
+        // for (let i = 10; i<20; i++)
+        // for (let i = 20; i<30;  i++)
+        for (let i = startnum; i < startnum + pagesize; i++) {
+            // console.log(tableDataArr[i])
+            // 1. 造tr标签
+            let trObj = document.createElement('tr')
+                // console.log(trObj)
+                // 2. tr里面放td数据
+            trObj.innerHTML = `
+            <td></td>
+            <td>${tableDataArr[i].id}</td>
+            <td>${tableDataArr[i].name}</td>
+            <td>${tableDataArr[i].age}</td>
+            <td>${tableDataArr[i].gender}</td>
+            <td>${tableDataArr[i].class}</td>
+            <td>${tableDataArr[i].score}</td>
+        `
+                // 3. 追加到tbody里面
+            document.querySelector('tbody').appendChild(trObj)
+        }
+    </script>
+
+
+
+
+
+
+
+    <!-- 分页 -->
+    <script src="./yourCutePage/yourCutePage.js"></script>
+    <script>
+        new YourPageInit({
+            pages: 100,
+            currentPage: 1,
+            everyPageSize: 7, //bukeyi改
+            element: ".your-page",
+            firstPage: "首页",
+            lastPage: "末页",
+            previousPage: "上一页",
+            nextPage: "下一页",
+            targetPage: "->",
+            callback: function(pagenum) {
+                let pagesize = 10
+                let startno = (pagenum - 1) * pagesize
+                let html = ''
+                for (let i = startno; i < startno + pagesize; i++) {
+                    // tableDataArr[i]
+                    html += `
+                <tr>
+                <td></td>
+                <td>${tableDataArr[i].id}</td>
+                <td>${tableDataArr[i].name}</td>
+                <td>${tableDataArr[i].age}</td>
+                <td>${tableDataArr[i].gender}</td>
+                <td>${tableDataArr[i].class}</td>
+                <td>${tableDataArr[i].score}</td>
+                </tr>
+            `
+                }
+                // 拼接数据最后覆盖
+                document.querySelector('tbody').innerHTML = html
+
+                console.log("当前页码：", pagenum + "页")
+            }
+        });
+    </script>
+</body>
+
+</html>
